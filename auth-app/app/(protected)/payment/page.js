@@ -2,16 +2,16 @@
 
 import { useState } from 'react';
 import { useAuth } from '../../providers/AuthProvider';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Payment() {
   const { currentUser, logout } = useAuth();
   const router = useRouter();
-  const location = useLocation();
+  const searchParams = useSearchParams();
   const [darkMode, setDarkMode] = useState(true);
 
-  // Get plan from navigation state, default to Pro
-  const plan = location.state?.plan || 'Pro';
+  // Get plan from URL params, default to Pro
+  const plan = searchParams.get('plan') || 'Pro';
   const amount = plan === 'Pro' ? 15 : 0;
 
   // Form state
