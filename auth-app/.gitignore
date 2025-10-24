@@ -25,3 +25,5 @@ dist-ssr
 .next/
 node_modules/
 .vercel
+*.env
+test*.env

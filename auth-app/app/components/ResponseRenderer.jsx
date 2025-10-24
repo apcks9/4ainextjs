@@ -67,30 +67,30 @@ export default function ResponseRenderer({ response, darkMode }) {
                   a: ({node, ...props}) => (
                     <a className={`underline ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`} target="_blank" rel="noopener noreferrer" {...props} />
                   ),
-                  // Style lists - compact
+                  // Style lists - ultra compact
                   ul: ({node, ...props}) => (
-                    <ul className="list-disc list-inside my-0.5 space-y-0" {...props} />
+                    <ul className="list-disc list-inside my-0 space-y-0" {...props} />
                   ),
                   ol: ({node, ...props}) => (
-                    <ol className="list-decimal list-inside my-0.5 space-y-0" {...props} />
+                    <ol className="list-decimal list-inside my-0 space-y-0" {...props} />
                   ),
-                  // Style headings - compact
+                  // Style headings - ultra compact
                   h1: ({node, ...props}) => (
-                    <h1 className="text-base font-bold my-1" {...props} />
+                    <h1 className="text-base font-bold my-0.5" {...props} />
                   ),
                   h2: ({node, ...props}) => (
-                    <h2 className="text-sm font-bold my-1" {...props} />
+                    <h2 className="text-sm font-bold my-0.5" {...props} />
                   ),
                   h3: ({node, ...props}) => (
-                    <h3 className="text-sm font-bold my-0.5" {...props} />
+                    <h3 className="text-sm font-bold my-0" {...props} />
                   ),
                   // Style blockquotes - compact
                   blockquote: ({node, ...props}) => (
                     <blockquote className={`border-l-2 pl-2 my-0.5 italic text-xs ${darkMode ? 'border-gray-600 text-gray-400' : 'border-gray-400 text-gray-600'}`} {...props} />
                   ),
-                  // Style paragraphs - compact
+                  // Style paragraphs - ultra compact
                   p: ({node, ...props}) => (
-                    <p className="my-0.5 leading-tight" {...props} />
+                    <p className="my-0 leading-snug" {...props} />
                   ),
                   }}
                 >
@@ -155,42 +155,42 @@ export default function ResponseRenderer({ response, darkMode }) {
         a: ({node, ...props}) => (
           <a className={`underline ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`} target="_blank" rel="noopener noreferrer" {...props} />
         ),
-        // Style lists - compact
+        // Style lists - ultra compact
         ul: ({node, ...props}) => (
-          <ul className="list-disc list-inside my-0.5 space-y-0" {...props} />
+          <ul className="list-disc list-inside my-0 space-y-0" {...props} />
         ),
         ol: ({node, ...props}) => (
-          <ol className="list-decimal list-inside my-0.5 space-y-0" {...props} />
+          <ol className="list-decimal list-inside my-0 space-y-0" {...props} />
         ),
         li: ({node, ...props}) => (
           <li className="ml-2" {...props} />
         ),
-        // Style headings - compact
+        // Style headings - ultra compact
         h1: ({node, ...props}) => (
-          <h1 className="text-base font-bold my-1" {...props} />
+          <h1 className="text-base font-bold my-0.5" {...props} />
         ),
         h2: ({node, ...props}) => (
-          <h2 className="text-sm font-bold my-1" {...props} />
+          <h2 className="text-sm font-bold my-0.5" {...props} />
         ),
         h3: ({node, ...props}) => (
-          <h3 className="text-sm font-bold my-0.5" {...props} />
+          <h3 className="text-sm font-bold my-0" {...props} />
         ),
         h4: ({node, ...props}) => (
-          <h4 className="text-xs font-bold my-0.5" {...props} />
+          <h4 className="text-xs font-bold my-0" {...props} />
         ),
         h5: ({node, ...props}) => (
-          <h5 className="text-xs font-bold my-0.5" {...props} />
+          <h5 className="text-xs font-bold my-0" {...props} />
         ),
         h6: ({node, ...props}) => (
-          <h6 className="text-xs font-bold my-0.5" {...props} />
+          <h6 className="text-xs font-bold my-0" {...props} />
         ),
         // Style blockquotes - compact
         blockquote: ({node, ...props}) => (
           <blockquote className={`border-l-2 pl-2 my-0.5 italic text-xs ${darkMode ? 'border-gray-600 text-gray-400' : 'border-gray-400 text-gray-600'}`} {...props} />
         ),
-        // Style paragraphs - compact
+        // Style paragraphs - ultra compact
         p: ({node, ...props}) => (
-          <p className="my-0.5 leading-tight" {...props} />
+          <p className="my-0 leading-snug" {...props} />
         ),
         // Style images - compact
         img: ({node, ...props}) => (

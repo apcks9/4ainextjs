@@ -220,7 +220,7 @@ export default function GridOnly() {
         <div className="grid grid-cols-2 grid-rows-2 gap-1 h-[calc(100vh-100px)]">
           {/* Claude Response - Top Left */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
-            <h4 className={`text-xs font-semibold ${darkMode ? 'text-blue-400' : 'text-blue-600'} mb-1 flex items-center gap-1 px-1 flex-shrink-0`}>
+            <h4 className={`text-xs font-semibold ${darkMode ? 'text-blue-400' : 'text-blue-600'} mb-0 flex items-center gap-1 px-1 flex-shrink-0`}>
               <span className="text-sm">🤖</span> Claude
             </h4>
             <div className={`ai-response ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs overflow-y-auto px-1 flex-1 min-h-0`}>
@@ -230,7 +230,7 @@ export default function GridOnly() {
 
           {/* ChatGPT Response - Top Right */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
-            <h4 className={`text-xs font-semibold ${darkMode ? 'text-green-400' : 'text-green-600'} mb-1 flex items-center gap-1 px-1 flex-shrink-0`}>
+            <h4 className={`text-xs font-semibold ${darkMode ? 'text-green-400' : 'text-green-600'} mb-0 flex items-center gap-1 px-1 flex-shrink-0`}>
               <span className="text-sm">💬</span> ChatGPT
             </h4>
             <div className={`ai-response ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs overflow-y-auto px-1 flex-1 min-h-0`}>
@@ -240,7 +240,7 @@ export default function GridOnly() {
 
           {/* Grok Response - Bottom Left */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
-            <h4 className={`text-xs font-semibold ${darkMode ? 'text-purple-400' : 'text-purple-600'} mb-1 flex items-center gap-1 px-1 flex-shrink-0`}>
+            <h4 className={`text-xs font-semibold ${darkMode ? 'text-purple-400' : 'text-purple-600'} mb-0 flex items-center gap-1 px-1 flex-shrink-0`}>
               <span className="text-sm">⚡</span> Grok
             </h4>
             <div className={`ai-response ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs overflow-y-auto px-1 flex-1 min-h-0`}>
@@ -250,7 +250,7 @@ export default function GridOnly() {
 
           {/* Perplexity Response - Bottom Right */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
-            <h4 className={`text-xs font-semibold ${darkMode ? 'text-orange-400' : 'text-orange-600'} mb-1 flex items-center gap-1 px-1 flex-shrink-0`}>
+            <h4 className={`text-xs font-semibold ${darkMode ? 'text-orange-400' : 'text-orange-600'} mb-0 flex items-center gap-1 px-1 flex-shrink-0`}>
               <span className="text-sm">🔍</span> Perplexity
             </h4>
             <div className={`ai-response ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs overflow-y-auto px-1 flex-1 min-h-0`}>
