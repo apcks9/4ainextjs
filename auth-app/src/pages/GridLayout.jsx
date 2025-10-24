@@ -105,7 +105,7 @@ export default function GridLayout() {
 
     try {
       // Call Claude API through backend
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/claude', {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/claude`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
