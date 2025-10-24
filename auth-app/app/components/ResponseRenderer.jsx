@@ -34,11 +34,15 @@ export default function ResponseRenderer({ response, darkMode }) {
         {response.map((item, index) => {
           if (item.type === 'text') {
             return (
-              <div key={index} className="markdown-content">
+              <div key={index} className="markdown-content" style={{ lineHeight: '0.9' }}>
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm, remarkMath]}
                   rehypePlugins={[rehypeKatex, rehypeRaw]}
                   components={{
+                  // Style line breaks to be very compact
+                  br: ({node, ...props}) => (
+                    <br style={{ lineHeight: '0.1', fontSize: '1px', margin: 0, padding: 0 }} {...props} />
+                  ),
                   // Style tables - compact
                   table: ({node, ...props}) => (
                     <div className="overflow-x-auto my-1">
@@ -57,11 +61,11 @@ export default function ResponseRenderer({ response, darkMode }) {
                   // Style code blocks - compact
                   code: ({node, inline, ...props}) => (
                     inline
-                      ? <code className={`px-0.5 rounded text-xs ${darkMode ? 'bg-gray-700 text-blue-300' : 'bg-gray-200 text-blue-700'}`} {...props} />
-                      : <code className={`block p-1 rounded my-0.5 overflow-x-auto text-xs ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'}`} {...props} />
+                      ? <code className={`px-0.5 rounded text-xs ${darkMode ? 'bg-gray-700 text-blue-300' : 'bg-gray-200 text-blue-700'}`} style={{ lineHeight: '0.9' }} {...props} />
+                      : <code className={`block p-1 rounded my-0 overflow-x-auto text-xs ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'}`} style={{ lineHeight: '0.9' }} {...props} />
                   ),
                   pre: ({node, ...props}) => (
-                    <pre className="my-0.5" {...props} />
+                    <pre className="my-0" style={{ lineHeight: '0.9' }} {...props} />
                   ),
                   // Style links - compact
                   a: ({node, ...props}) => (
@@ -69,20 +73,20 @@ export default function ResponseRenderer({ response, darkMode }) {
                   ),
                   // Style lists - ultra compact
                   ul: ({node, ...props}) => (
-                    <ul className="list-disc list-inside my-0 space-y-0" {...props} />
+                    <ul className="list-disc list-inside my-0 space-y-0" style={{ lineHeight: '0.9' }} {...props} />
                   ),
                   ol: ({node, ...props}) => (
-                    <ol className="list-decimal list-inside my-0 space-y-0" {...props} />
+                    <ol className="list-decimal list-inside my-0 space-y-0" style={{ lineHeight: '0.9' }} {...props} />
                   ),
                   // Style headings - ultra compact
                   h1: ({node, ...props}) => (
-                    <h1 className="text-base font-bold my-0.5" {...props} />
+                    <h1 className="text-base font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
                   ),
                   h2: ({node, ...props}) => (
-                    <h2 className="text-sm font-bold my-0.5" {...props} />
+                    <h2 className="text-sm font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
                   ),
                   h3: ({node, ...props}) => (
-                    <h3 className="text-sm font-bold my-0" {...props} />
+                    <h3 className="text-sm font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
                   ),
                   // Style blockquotes - compact
                   blockquote: ({node, ...props}) => (
@@ -90,7 +94,7 @@ export default function ResponseRenderer({ response, darkMode }) {
                   ),
                   // Style paragraphs - ultra compact
                   p: ({node, ...props}) => (
-                    <p className="my-0 leading-snug" {...props} />
+                    <p className="my-0" style={{ lineHeight: '0.9' }} {...props} />
                   ),
                   }}
                 >
@@ -116,11 +120,15 @@ export default function ResponseRenderer({ response, darkMode }) {
 
   // Regular text response - render as markdown
   return (
-    <div className="markdown-content">
+    <div className="markdown-content" style={{ lineHeight: '0.9' }}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeKatex, rehypeRaw]}
         components={{
+        // Style line breaks to be very compact
+        br: ({node, ...props}) => (
+          <br style={{ lineHeight: '0.1', fontSize: '1px', margin: 0, padding: 0 }} {...props} />
+        ),
         // Style tables - compact
         table: ({node, ...props}) => (
           <div className="overflow-x-auto my-1">
@@ -145,11 +153,11 @@ export default function ResponseRenderer({ response, darkMode }) {
         // Style code blocks - compact
         code: ({node, inline, ...props}) => (
           inline
-            ? <code className={`px-0.5 rounded font-mono text-xs ${darkMode ? 'bg-gray-700 text-blue-300' : 'bg-gray-200 text-blue-700'}`} {...props} />
-            : <code className={`block p-1 rounded my-0.5 overflow-x-auto font-mono text-xs ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'}`} {...props} />
+            ? <code className={`px-0.5 rounded font-mono text-xs ${darkMode ? 'bg-gray-700 text-blue-300' : 'bg-gray-200 text-blue-700'}`} style={{ lineHeight: '0.9' }} {...props} />
+            : <code className={`block p-1 rounded my-0 overflow-x-auto font-mono text-xs ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'}`} style={{ lineHeight: '0.9' }} {...props} />
         ),
         pre: ({node, ...props}) => (
-          <pre className="my-0.5 rounded" {...props} />
+          <pre className="my-0 rounded" style={{ lineHeight: '0.9' }} {...props} />
         ),
         // Style links - compact
         a: ({node, ...props}) => (
@@ -157,32 +165,32 @@ export default function ResponseRenderer({ response, darkMode }) {
         ),
         // Style lists - ultra compact
         ul: ({node, ...props}) => (
-          <ul className="list-disc list-inside my-0 space-y-0" {...props} />
+          <ul className="list-disc list-inside my-0 space-y-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         ol: ({node, ...props}) => (
-          <ol className="list-decimal list-inside my-0 space-y-0" {...props} />
+          <ol className="list-decimal list-inside my-0 space-y-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         li: ({node, ...props}) => (
-          <li className="ml-2" {...props} />
+          <li className="ml-2" style={{ lineHeight: '0.9' }} {...props} />
         ),
         // Style headings - ultra compact
         h1: ({node, ...props}) => (
-          <h1 className="text-base font-bold my-0.5" {...props} />
+          <h1 className="text-base font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         h2: ({node, ...props}) => (
-          <h2 className="text-sm font-bold my-0.5" {...props} />
+          <h2 className="text-sm font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         h3: ({node, ...props}) => (
-          <h3 className="text-sm font-bold my-0" {...props} />
+          <h3 className="text-sm font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         h4: ({node, ...props}) => (
-          <h4 className="text-xs font-bold my-0" {...props} />
+          <h4 className="text-xs font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         h5: ({node, ...props}) => (
-          <h5 className="text-xs font-bold my-0" {...props} />
+          <h5 className="text-xs font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         h6: ({node, ...props}) => (
-          <h6 className="text-xs font-bold my-0" {...props} />
+          <h6 className="text-xs font-bold my-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         // Style blockquotes - compact
         blockquote: ({node, ...props}) => (
@@ -190,7 +198,7 @@ export default function ResponseRenderer({ response, darkMode }) {
         ),
         // Style paragraphs - ultra compact
         p: ({node, ...props}) => (
-          <p className="my-0 leading-snug" {...props} />
+          <p className="my-0" style={{ lineHeight: '0.9' }} {...props} />
         ),
         // Style images - compact
         img: ({node, ...props}) => (

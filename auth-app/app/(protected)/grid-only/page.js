@@ -1,7 +1,7 @@
 'use client';
 
 // Updated: Fixed Claude API error handling - v2.0
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../providers/AuthProvider';
 import { useRouter } from 'next/navigation';
 import ResponseRenderer from '../../components/ResponseRenderer';
@@ -24,12 +24,35 @@ export default function GridOnly() {
     grok: process.env.NEXT_PUBLIC_GROK_API_KEY || '',
     perplexity: process.env.NEXT_PUBLIC_PERPLEXITY_API_KEY || ''
   });
+  const [queryHistory, setQueryHistory] = useState([]);
+
+  // Load history from localStorage on mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('gridOnlyHistory');
+    if (savedHistory) {
+      try {
+        setQueryHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.error('Error loading history:', e);
+      }
+    }
+  }, []);
+
+  // Save history to localStorage whenever it changes
+  useEffect(() => {
+    if (queryHistory.length > 0) {
+      localStorage.setItem('gridOnlyHistory', JSON.stringify(queryHistory));
+    }
+  }, [queryHistory]);
 
   const handleAiSubmit = async (e) => {
     e.preventDefault();
     if (!aiInput.trim()) return;
 
     const queryText = aiInput;
+    const timestamp = new Date().toLocaleString();
+    const historyId = Date.now();
+
     setAiInput('');
     setLoading(true);
 
@@ -39,6 +62,20 @@ export default function GridOnly() {
       grok: 'Loading...',
       perplexity: 'Loading...'
     });
+
+    // Create initial history entry
+    const newHistoryItem = {
+      id: historyId,
+      query: queryText,
+      timestamp,
+      responses: {
+        claude: '',
+        chatgpt: '',
+        grok: '',
+        perplexity: ''
+      }
+    };
+    setQueryHistory(prev => [newHistoryItem, ...prev]);
 
     const CLAUDE_API_KEY = apiKeys.claude;
     const OPENAI_API_KEY = apiKeys.chatgpt;
@@ -71,9 +108,24 @@ export default function GridOnly() {
             ? `Error: ${data.error.message || JSON.stringify(data.error)}`
             : data.content?.[0]?.text || 'Error: Unable to get response';
           setAiResponses(prev => ({ ...prev, claude: response }));
+
+          // Update history with Claude response
+          setQueryHistory(prev => prev.map(item =>
+            item.id === historyId
+              ? { ...item, responses: { ...item.responses, claude: response } }
+              : item
+          ));
         })
         .catch(err => {
-          setAiResponses(prev => ({ ...prev, claude: `Error: ${err.message}` }));
+          const errorMsg = `Error: ${err.message}`;
+          setAiResponses(prev => ({ ...prev, claude: errorMsg }));
+
+          // Update history with error
+          setQueryHistory(prev => prev.map(item =>
+            item.id === historyId
+              ? { ...item, responses: { ...item.responses, claude: errorMsg } }
+              : item
+          ));
         });
 
       // Call OpenAI API directly
@@ -94,9 +146,24 @@ export default function GridOnly() {
             ? `Error: ${data.error.message || JSON.stringify(data.error)}`
             : data.choices?.[0]?.message?.content || 'Error: Unable to get response';
           setAiResponses(prev => ({ ...prev, chatgpt: response }));
+
+          // Update history with ChatGPT response
+          setQueryHistory(prev => prev.map(item =>
+            item.id === historyId
+              ? { ...item, responses: { ...item.responses, chatgpt: response } }
+              : item
+          ));
         })
         .catch(err => {
-          setAiResponses(prev => ({ ...prev, chatgpt: `Error: ${err.message}` }));
+          const errorMsg = `Error: ${err.message}`;
+          setAiResponses(prev => ({ ...prev, chatgpt: errorMsg }));
+
+          // Update history with error
+          setQueryHistory(prev => prev.map(item =>
+            item.id === historyId
+              ? { ...item, responses: { ...item.responses, chatgpt: errorMsg } }
+              : item
+          ));
         });
 
       // Call Grok API directly
@@ -117,9 +184,24 @@ export default function GridOnly() {
             ? `Error: ${data.error.message || JSON.stringify(data.error)}`
             : data.choices?.[0]?.message?.content || 'Error: Unable to get response';
           setAiResponses(prev => ({ ...prev, grok: response }));
+
+          // Update history with Grok response
+          setQueryHistory(prev => prev.map(item =>
+            item.id === historyId
+              ? { ...item, responses: { ...item.responses, grok: response } }
+              : item
+          ));
         })
         .catch(err => {
-          setAiResponses(prev => ({ ...prev, grok: `Error: ${err.message}` }));
+          const errorMsg = `Error: ${err.message}`;
+          setAiResponses(prev => ({ ...prev, grok: errorMsg }));
+
+          // Update history with error
+          setQueryHistory(prev => prev.map(item =>
+            item.id === historyId
+              ? { ...item, responses: { ...item.responses, grok: errorMsg } }
+              : item
+          ));
         });
 
       // Call Perplexity API directly
@@ -140,15 +222,37 @@ export default function GridOnly() {
             ? `Error: ${data.error.message || JSON.stringify(data.error)}`
             : data.choices?.[0]?.message?.content || 'Error: Unable to get response';
           setAiResponses(prev => ({ ...prev, perplexity: response }));
+
+          // Update history with Perplexity response
+          setQueryHistory(prev => prev.map(item =>
+            item.id === historyId
+              ? { ...item, responses: { ...item.responses, perplexity: response } }
+              : item
+          ));
         })
         .catch(err => {
-          setAiResponses(prev => ({ ...prev, perplexity: `Error: ${err.message}` }));
+          const errorMsg = `Error: ${err.message}`;
+          setAiResponses(prev => ({ ...prev, perplexity: errorMsg }));
+
+          // Update history with error
+          setQueryHistory(prev => prev.map(item =>
+            item.id === historyId
+              ? { ...item, responses: { ...item.responses, perplexity: errorMsg } }
+              : item
+          ));
         });
 
     } catch (error) {
       console.error('AI API Error:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const clearHistory = () => {
+    if (confirm('Are you sure you want to clear all history? This cannot be undone.')) {
+      setQueryHistory([]);
+      localStorage.removeItem('gridOnlyHistory');
     }
   };
 
@@ -257,6 +361,26 @@ export default function GridOnly() {
               <ResponseRenderer response={aiResponses.perplexity} darkMode={darkMode} />
             </div>
           </div>
+        </div>
+
+        {/* History Controls */}
+        <div className="flex justify-center items-center gap-2 mt-1">
+          <button
+            onClick={() => router.push('/grid-with-history')}
+            className={`${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'} underline transition-colors`}
+            style={{ fontSize: '9px' }}
+          >
+            📝 View History ({queryHistory.length})
+          </button>
+          {queryHistory.length > 0 && (
+            <button
+              onClick={clearHistory}
+              className={`px-1.5 py-0.5 rounded ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-600 hover:bg-gray-700'} text-white transition-colors`}
+              style={{ fontSize: '9px' }}
+            >
+              🗑️ Clear
+            </button>
+          )}
         </div>
       </div>
     </div>

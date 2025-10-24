@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../providers/AuthProvider';
 import { useRouter } from 'next/navigation';
 import ResponseRenderer from '../../components/ResponseRenderer';
@@ -25,6 +25,18 @@ export default function GridWithHistory() {
   });
   const [queryHistory, setQueryHistory] = useState([]);
   const [selectedHistoryItem, setSelectedHistoryItem] = useState(null);
+
+  // Load history from localStorage on mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('gridOnlyHistory');
+    if (savedHistory) {
+      try {
+        setQueryHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.error('Error loading history:', e);
+      }
+    }
+  }, []);
 
   const handleAiSubmit = async (e) => {
     e.preventDefault();
@@ -252,6 +264,20 @@ export default function GridWithHistory() {
     setAiResponses(item.responses);
   };
 
+  const clearHistory = () => {
+    if (confirm('Are you sure you want to clear all history? This cannot be undone.')) {
+      setQueryHistory([]);
+      localStorage.removeItem('gridOnlyHistory');
+      setSelectedHistoryItem(null);
+      setAiResponses({
+        claude: '',
+        chatgpt: '',
+        grok: '',
+        perplexity: ''
+      });
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -363,15 +389,25 @@ export default function GridWithHistory() {
         {queryHistory.length > 0 && (
           <div className={`mt-4 p-3 ${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg border`}>
             <div className="flex justify-between items-center mb-2">
-              <h3 className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Query History</h3>
-              {selectedHistoryItem && (
+              <h3 className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Query History ({queryHistory.length})</h3>
+              <div className="flex gap-1">
+                {selectedHistoryItem && (
+                  <button
+                    onClick={() => setSelectedHistoryItem(null)}
+                    className={`px-1.5 py-0.5 rounded ${darkMode ? 'bg-gray-600 hover:bg-gray-500 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                    style={{ fontSize: '9px' }}
+                  >
+                    Clear Selection
+                  </button>
+                )}
                 <button
-                  onClick={() => setSelectedHistoryItem(null)}
-                  className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-600 hover:bg-gray-500 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                  onClick={clearHistory}
+                  className={`px-1.5 py-0.5 rounded ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-600 hover:bg-gray-700'} text-white`}
+                  style={{ fontSize: '9px' }}
                 >
-                  Clear Selection
+                  🗑️ Clear All
                 </button>
-              )}
+              </div>
             </div>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {queryHistory.map((item) => (
