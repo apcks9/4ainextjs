@@ -49,16 +49,27 @@ export default function Payment() {
   };
 
   const applyReferralCode = () => {
-    // Simple validation - in a real app, you'd verify this with your backend
-    if (referralCode.trim().length >= 5) {
-      setReferralDiscount(5);
-      setReferralApplied(true);
-      setReferralError('');
-    } else {
-      setReferralError('Please enter a valid referral code');
+    // Email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!referralCode.trim()) {
+      setReferralError('Please enter an email address');
       setReferralDiscount(0);
       setReferralApplied(false);
+      return;
     }
+
+    if (!emailRegex.test(referralCode.trim())) {
+      setReferralError('Please enter a valid email address');
+      setReferralDiscount(0);
+      setReferralApplied(false);
+      return;
+    }
+
+    // Valid email format
+    setReferralDiscount(5);
+    setReferralApplied(true);
+    setReferralError('');
   };
 
   const removeReferralCode = () => {
@@ -256,7 +267,7 @@ export default function Payment() {
                     value={formData.cardNumber}
                     onChange={handleInputChange}
                     placeholder="1234 5678 9012 3456"
-                    className={`w-full px-3 py-2 border ${errors.cardNumber ? 'border-red-500' : darkMode ? 'border-gray-600' : 'border-gray-300'} ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all`}
+                    className={`w-56 px-3 py-2 border ${errors.cardNumber ? 'border-red-500' : darkMode ? 'border-gray-600' : 'border-gray-300'} ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all`}
                   />
                   {errors.cardNumber && (
                     <p className="text-red-500 text-sm mt-1">{errors.cardNumber}</p>
@@ -282,8 +293,8 @@ export default function Payment() {
                 </div>
 
                 {/* Expiry & CVV */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
+                <div className="flex gap-2">
+                  <div className="w-32">
                     <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
                       Expiry Date
                     </label>
@@ -299,7 +310,7 @@ export default function Payment() {
                       <p className="text-red-500 text-sm mt-1">{errors.expiryDate}</p>
                     )}
                   </div>
-                  <div>
+                  <div className="w-24">
                     <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
                       CVV
                     </label>
