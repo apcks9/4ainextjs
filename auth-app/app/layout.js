@@ -2,8 +2,8 @@ import { AuthProvider } from './providers/AuthProvider';
 import './globals.css';
 
 export const metadata = {
-  title: 'Auth App',
-  description: 'Next.js authentication application',
+  title: '4ai v2',
+  description: '4AI Comparison Tool - Compare responses from Claude, ChatGPT, Grok, and Perplexity',
 };
 
 export default function RootLayout({ children }) {
