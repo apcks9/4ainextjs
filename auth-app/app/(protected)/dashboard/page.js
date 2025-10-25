@@ -790,6 +790,18 @@ export default function Dashboard() {
           >
             Grid with History
           </button>
+          <button
+            onClick={() => router.push('/super-grid')}
+            className={`px-6 py-2 ${darkMode ? 'bg-blue-700 hover:bg-blue-600' : 'bg-blue-400 hover:bg-blue-500'} text-white rounded-lg font-medium transition-all`}
+          >
+            Super Grid - Superman Mode
+          </button>
+          <button
+            onClick={() => router.push('/privacy-mode')}
+            className={`px-6 py-2 ${darkMode ? 'bg-purple-700 hover:bg-purple-600' : 'bg-purple-400 hover:bg-purple-500'} text-white rounded-lg font-medium transition-all`}
+          >
+            Privacy Mode 🔒
+          </button>
         </div>
         <div>© 2025 ezarg.com</div>
       </footer>

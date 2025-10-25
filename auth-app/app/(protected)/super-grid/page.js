@@ -6,11 +6,12 @@ import { useAuth } from '../../providers/AuthProvider';
 import { useRouter } from 'next/navigation';
 import ResponseRenderer from '../../components/ResponseRenderer';
 
-export default function GridOnly() {
+export default function SuperGrid() {
   const { currentUser, logout } = useAuth();
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(true);
   const [aiInput, setAiInput] = useState('');
+  const [aiInput2, setAiInput2] = useState('');
   const [aiResponses, setAiResponses] = useState({
     claude: '',
     chatgpt: '',
@@ -19,6 +20,7 @@ export default function GridOnly() {
   });
   const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
+  const inputRef2 = useRef(null);
 
   // Conversation history for each AI
   const [conversations, setConversations] = useState({
@@ -384,7 +386,7 @@ export default function GridOnly() {
         <div className="w-full px-4">
           <div className="flex justify-between items-center h-12">
             <div className="flex items-center cursor-pointer" onClick={() => router.push('/dashboard')}>
-              <span className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Ezarg - Grid Only</span>
+              <span className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Super Grid - Superman Mode</span>
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -412,15 +414,15 @@ export default function GridOnly() {
 
       {/* Main content area */}
       <div className="w-full px-2 py-2">
-        {/* Input bar */}
-        <form onSubmit={handleAiSubmit} className="mb-2">
+        {/* First Input bar */}
+        <form onSubmit={handleAiSubmit} className="mb-1">
           <div className="flex gap-2">
             <input
               ref={inputRef}
               type="text"
               value={aiInput}
               onChange={(e) => setAiInput(e.target.value)}
-              placeholder="Ask a question to all four AIs..."
+              placeholder="Query #1 - Ask a question to all four AIs..."
               className={`flex-1 px-3 py-1 text-sm border ${darkMode ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900'} rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
             />
             <button
@@ -428,13 +430,34 @@ export default function GridOnly() {
               disabled={loading || !aiInput.trim()}
               className="px-4 py-1 text-sm bg-blue-600 text-white rounded font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Sending...' : 'Submit'}
+              {loading ? 'Sending...' : 'Submit #1'}
+            </button>
+          </div>
+        </form>
+
+        {/* Second Input bar */}
+        <form onSubmit={handleAiSubmit} className="mb-2">
+          <div className="flex gap-2">
+            <input
+              ref={inputRef2}
+              type="text"
+              value={aiInput2}
+              onChange={(e) => setAiInput2(e.target.value)}
+              placeholder="Query #2 - Ask a second question to all four AIs..."
+              className={`flex-1 px-3 py-1 text-sm border ${darkMode ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900'} rounded focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all`}
+            />
+            <button
+              type="submit"
+              disabled={loading || !aiInput2.trim()}
+              className="px-4 py-1 text-sm bg-green-600 text-white rounded font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Sending...' : 'Submit #2'}
             </button>
           </div>
         </form>
 
         {/* 2x2 Grid Layout - Full screen */}
-        <div className="grid grid-cols-2 grid-rows-2 gap-1 h-[calc(100vh-100px)]">
+        <div className="grid grid-cols-2 grid-rows-2 gap-1 h-[calc(100vh-130px)]">
           {/* Claude Response - Top Left */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
             <div className="flex items-center px-1 mb-0 flex-shrink-0">
