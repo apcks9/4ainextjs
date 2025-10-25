@@ -18,6 +18,14 @@ export default function GridOnly() {
     perplexity: ''
   });
   const [loading, setLoading] = useState(false);
+
+  // Conversation history for each AI
+  const [conversations, setConversations] = useState({
+    claude: [],
+    chatgpt: [],
+    grok: [],
+    perplexity: []
+  });
   const [apiKeys, setApiKeys] = useState({
     claude: process.env.NEXT_PUBLIC_CLAUDE_API_KEY || '',
     chatgpt: process.env.NEXT_PUBLIC_OPENAI_API_KEY || '',
@@ -83,6 +91,15 @@ export default function GridOnly() {
     const PERPLEXITY_API_KEY = apiKeys.perplexity;
 
     try {
+      // Build conversation history for Claude
+      const claudeMessages = [
+        ...conversations.claude.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        })),
+        { role: 'user', content: queryText }
+      ];
+
       // Call Claude API through backend
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/claude`, {
         method: 'POST',
@@ -91,6 +108,7 @@ export default function GridOnly() {
         },
         body: JSON.stringify({
           message: queryText,
+          messages: claudeMessages,
           apiKey: CLAUDE_API_KEY
         })
       })
@@ -108,6 +126,18 @@ export default function GridOnly() {
             ? `Error: ${data.error.message || JSON.stringify(data.error)}`
             : data.content?.[0]?.text || 'Error: Unable to get response';
           setAiResponses(prev => ({ ...prev, claude: response }));
+
+          // Update conversation history
+          if (!data.error) {
+            setConversations(prev => ({
+              ...prev,
+              claude: [
+                ...prev.claude,
+                { role: 'user', content: queryText },
+                { role: 'assistant', content: response }
+              ]
+            }));
+          }
 
           // Update history with Claude response
           setQueryHistory(prev => prev.map(item =>
@@ -128,6 +158,15 @@ export default function GridOnly() {
           ));
         });
 
+      // Build conversation history for ChatGPT
+      const chatgptMessages = [
+        ...conversations.chatgpt.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        })),
+        { role: 'user', content: queryText }
+      ];
+
       // Call OpenAI API directly
       fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -137,7 +176,7 @@ export default function GridOnly() {
         },
         body: JSON.stringify({
           model: 'gpt-5',
-          messages: [{ role: 'user', content: queryText }]
+          messages: chatgptMessages
         })
       })
         .then(res => res.json())
@@ -146,6 +185,18 @@ export default function GridOnly() {
             ? `Error: ${data.error.message || JSON.stringify(data.error)}`
             : data.choices?.[0]?.message?.content || 'Error: Unable to get response';
           setAiResponses(prev => ({ ...prev, chatgpt: response }));
+
+          // Update conversation history
+          if (!data.error) {
+            setConversations(prev => ({
+              ...prev,
+              chatgpt: [
+                ...prev.chatgpt,
+                { role: 'user', content: queryText },
+                { role: 'assistant', content: response }
+              ]
+            }));
+          }
 
           // Update history with ChatGPT response
           setQueryHistory(prev => prev.map(item =>
@@ -166,6 +217,15 @@ export default function GridOnly() {
           ));
         });
 
+      // Build conversation history for Grok
+      const grokMessages = [
+        ...conversations.grok.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        })),
+        { role: 'user', content: queryText }
+      ];
+
       // Call Grok API directly
       fetch('https://api.x.ai/v1/chat/completions', {
         method: 'POST',
@@ -175,7 +235,7 @@ export default function GridOnly() {
         },
         body: JSON.stringify({
           model: 'grok-4',
-          messages: [{ role: 'user', content: queryText }]
+          messages: grokMessages
         })
       })
         .then(res => res.json())
@@ -184,6 +244,18 @@ export default function GridOnly() {
             ? `Error: ${data.error.message || JSON.stringify(data.error)}`
             : data.choices?.[0]?.message?.content || 'Error: Unable to get response';
           setAiResponses(prev => ({ ...prev, grok: response }));
+
+          // Update conversation history
+          if (!data.error) {
+            setConversations(prev => ({
+              ...prev,
+              grok: [
+                ...prev.grok,
+                { role: 'user', content: queryText },
+                { role: 'assistant', content: response }
+              ]
+            }));
+          }
 
           // Update history with Grok response
           setQueryHistory(prev => prev.map(item =>
@@ -204,6 +276,15 @@ export default function GridOnly() {
           ));
         });
 
+      // Build conversation history for Perplexity
+      const perplexityMessages = [
+        ...conversations.perplexity.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        })),
+        { role: 'user', content: queryText }
+      ];
+
       // Call Perplexity API directly
       fetch('https://api.perplexity.ai/chat/completions', {
         method: 'POST',
@@ -213,7 +294,7 @@ export default function GridOnly() {
         },
         body: JSON.stringify({
           model: 'sonar',
-          messages: [{ role: 'user', content: queryText }]
+          messages: perplexityMessages
         })
       })
         .then(res => res.json())
@@ -222,6 +303,18 @@ export default function GridOnly() {
             ? `Error: ${data.error.message || JSON.stringify(data.error)}`
             : data.choices?.[0]?.message?.content || 'Error: Unable to get response';
           setAiResponses(prev => ({ ...prev, perplexity: response }));
+
+          // Update conversation history
+          if (!data.error) {
+            setConversations(prev => ({
+              ...prev,
+              perplexity: [
+                ...prev.perplexity,
+                { role: 'user', content: queryText },
+                { role: 'assistant', content: response }
+              ]
+            }));
+          }
 
           // Update history with Perplexity response
           setQueryHistory(prev => prev.map(item =>
@@ -253,6 +346,19 @@ export default function GridOnly() {
     if (confirm('Are you sure you want to clear all history? This cannot be undone.')) {
       setQueryHistory([]);
       localStorage.removeItem('gridOnlyHistory');
+    }
+  };
+
+  const clearConversation = (aiName) => {
+    if (confirm(`Clear ${aiName} conversation? This will reset the conversation history.`)) {
+      setConversations(prev => ({
+        ...prev,
+        [aiName]: []
+      }));
+      setAiResponses(prev => ({
+        ...prev,
+        [aiName]: ''
+      }));
     }
   };
 
@@ -324,9 +430,26 @@ export default function GridOnly() {
         <div className="grid grid-cols-2 grid-rows-2 gap-1 h-[calc(100vh-100px)]">
           {/* Claude Response - Top Left */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
-            <h4 className={`text-xs font-semibold ${darkMode ? 'text-blue-400' : 'text-blue-600'} mb-0 flex items-center gap-1 px-1 flex-shrink-0`}>
-              <span className="text-sm">🤖</span> Claude
-            </h4>
+            <div className="flex items-center px-1 mb-0 flex-shrink-0">
+              <h4 className={`text-xs font-semibold ${darkMode ? 'text-blue-400' : 'text-blue-600'} flex items-center gap-1`}>
+                <span className="text-sm">🤖</span> Claude
+                {conversations.claude.length > 0 && (
+                  <>
+                    <span className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`} style={{ fontSize: '6px' }}>
+                      ({conversations.claude.length / 2} memories)
+                    </span>
+                    <button
+                      onClick={() => clearConversation('claude')}
+                      className={`${darkMode ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-600'} transition-colors cursor-pointer`}
+                      style={{ fontSize: '10px' }}
+                      title="Delete memories"
+                    >
+                      🗑️
+                    </button>
+                  </>
+                )}
+              </h4>
+            </div>
             <div className={`ai-response ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs overflow-y-auto px-1 flex-1 min-h-0`}>
               <ResponseRenderer response={aiResponses.claude} darkMode={darkMode} />
             </div>
@@ -334,9 +457,26 @@ export default function GridOnly() {
 
           {/* ChatGPT Response - Top Right */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
-            <h4 className={`text-xs font-semibold ${darkMode ? 'text-green-400' : 'text-green-600'} mb-0 flex items-center gap-1 px-1 flex-shrink-0`}>
-              <span className="text-sm">💬</span> ChatGPT
-            </h4>
+            <div className="flex items-center px-1 mb-0 flex-shrink-0">
+              <h4 className={`text-xs font-semibold ${darkMode ? 'text-green-400' : 'text-green-600'} flex items-center gap-1`}>
+                <span className="text-sm">💬</span> ChatGPT
+                {conversations.chatgpt.length > 0 && (
+                  <>
+                    <span className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`} style={{ fontSize: '6px' }}>
+                      ({conversations.chatgpt.length / 2} memories)
+                    </span>
+                    <button
+                      onClick={() => clearConversation('chatgpt')}
+                      className={`${darkMode ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-600'} transition-colors cursor-pointer`}
+                      style={{ fontSize: '10px' }}
+                      title="Delete memories"
+                    >
+                      🗑️
+                    </button>
+                  </>
+                )}
+              </h4>
+            </div>
             <div className={`ai-response ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs overflow-y-auto px-1 flex-1 min-h-0`}>
               <ResponseRenderer response={aiResponses.chatgpt} darkMode={darkMode} />
             </div>
@@ -344,9 +484,26 @@ export default function GridOnly() {
 
           {/* Grok Response - Bottom Left */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
-            <h4 className={`text-xs font-semibold ${darkMode ? 'text-purple-400' : 'text-purple-600'} mb-0 flex items-center gap-1 px-1 flex-shrink-0`}>
-              <span className="text-sm">⚡</span> Grok
-            </h4>
+            <div className="flex items-center px-1 mb-0 flex-shrink-0">
+              <h4 className={`text-xs font-semibold ${darkMode ? 'text-purple-400' : 'text-purple-600'} flex items-center gap-1`}>
+                <span className="text-sm">⚡</span> Grok
+                {conversations.grok.length > 0 && (
+                  <>
+                    <span className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`} style={{ fontSize: '6px' }}>
+                      ({conversations.grok.length / 2} memories)
+                    </span>
+                    <button
+                      onClick={() => clearConversation('grok')}
+                      className={`${darkMode ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-600'} transition-colors cursor-pointer`}
+                      style={{ fontSize: '10px' }}
+                      title="Delete memories"
+                    >
+                      🗑️
+                    </button>
+                  </>
+                )}
+              </h4>
+            </div>
             <div className={`ai-response ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs overflow-y-auto px-1 flex-1 min-h-0`}>
               <ResponseRenderer response={aiResponses.grok} darkMode={darkMode} />
             </div>
@@ -354,9 +511,26 @@ export default function GridOnly() {
 
           {/* Perplexity Response - Bottom Right */}
           <div className={`${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-lg p-1 border flex flex-col overflow-hidden`}>
-            <h4 className={`text-xs font-semibold ${darkMode ? 'text-orange-400' : 'text-orange-600'} mb-0 flex items-center gap-1 px-1 flex-shrink-0`}>
-              <span className="text-sm">🔍</span> Perplexity
-            </h4>
+            <div className="flex items-center px-1 mb-0 flex-shrink-0">
+              <h4 className={`text-xs font-semibold ${darkMode ? 'text-orange-400' : 'text-orange-600'} flex items-center gap-1`}>
+                <span className="text-sm">🔍</span> Perplexity
+                {conversations.perplexity.length > 0 && (
+                  <>
+                    <span className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`} style={{ fontSize: '6px' }}>
+                      ({conversations.perplexity.length / 2} memories)
+                    </span>
+                    <button
+                      onClick={() => clearConversation('perplexity')}
+                      className={`${darkMode ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-600'} transition-colors cursor-pointer`}
+                      style={{ fontSize: '10px' }}
+                      title="Delete memories"
+                    >
+                      🗑️
+                    </button>
+                  </>
+                )}
+              </h4>
+            </div>
             <div className={`ai-response ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs overflow-y-auto px-1 flex-1 min-h-0`}>
               <ResponseRenderer response={aiResponses.perplexity} darkMode={darkMode} />
             </div>
