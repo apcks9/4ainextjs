@@ -39,7 +39,7 @@ export default function Register() {
       setError('');
       setLoading(true);
       await signup(formData.email, formData.password, formData.name);
-      router.push('/dashboard');
+      router.push('/grid-only');
     } catch (error) {
       console.error('Registration error:', error);
       if (error.code === 'auth/email-already-in-use') {

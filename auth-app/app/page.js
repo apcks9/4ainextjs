@@ -20,7 +20,7 @@ export default function Login() {
       setError('');
       setLoading(true);
       await login(email, password);
-      router.push('/dashboard');
+      router.push('/grid-only');
     } catch (error) {
       console.error('Login error:', error);
       setError('Failed to sign in. Please check your credentials.');

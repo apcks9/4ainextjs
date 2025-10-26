@@ -132,7 +132,7 @@ export default function SuperGrid() {
       ];
 
       // Call Claude API through backend
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/claude`, {
+      fetch(`/api/claude`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -199,7 +199,7 @@ export default function SuperGrid() {
       ];
 
       // Call OpenAI API directly
-      fetch('https://api.openai.com/v1/chat/completions', {
+      fetch('/api/openai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -258,7 +258,7 @@ export default function SuperGrid() {
       ];
 
       // Call Grok API directly
-      fetch('https://api.x.ai/v1/chat/completions', {
+      fetch('/api/grok', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -317,7 +317,7 @@ export default function SuperGrid() {
       ];
 
       // Call Perplexity API directly
-      fetch('https://api.perplexity.ai/chat/completions', {
+      fetch('/api/perplexity', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -412,7 +412,7 @@ export default function SuperGrid() {
       ];
 
       // Call Claude API through backend
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/claude`, {
+      fetch(`/api/claude`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -465,7 +465,7 @@ export default function SuperGrid() {
       ];
 
       // Call OpenAI API directly
-      fetch('https://api.openai.com/v1/chat/completions', {
+      fetch('/api/openai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -510,7 +510,7 @@ export default function SuperGrid() {
       ];
 
       // Call Grok API directly
-      fetch('https://api.x.ai/v1/chat/completions', {
+      fetch('/api/grok', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -555,7 +555,7 @@ export default function SuperGrid() {
       ];
 
       // Call Perplexity API directly
-      fetch('https://api.perplexity.ai/chat/completions', {
+      fetch('/api/perplexity', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

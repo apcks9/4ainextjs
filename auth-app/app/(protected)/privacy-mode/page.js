@@ -55,7 +55,7 @@ export default function PrivacyMode() {
 
     try {
       // Call Claude API (no history in privacy mode)
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/claude`, {
+      fetch(`/api/claude`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ export default function PrivacyMode() {
         });
 
       // Call OpenAI API (no history in privacy mode)
-      fetch('https://api.openai.com/v1/chat/completions', {
+      fetch('/api/openai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export default function PrivacyMode() {
         });
 
       // Call Grok API (no history in privacy mode)
-      fetch('https://api.x.ai/v1/chat/completions', {
+      fetch('/api/grok', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ export default function PrivacyMode() {
         });
 
       // Call Perplexity API (no history in privacy mode)
-      fetch('https://api.perplexity.ai/chat/completions', {
+      fetch('/api/perplexity', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

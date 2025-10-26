@@ -8,8 +8,6 @@ export default function GridLayout() {
   const { currentUser, logout } = useAuth();
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(true);
-  const [location, setLocation] = useState(null);
-  const [locationError, setLocationError] = useState(null);
   const [subscriptionPlan, setSubscriptionPlan] = useState('Free Trial'); // Free Trial or Pro
   const [aiInput, setAiInput] = useState('');
   const [conversationHistory, setConversationHistory] = useState([]);
@@ -34,25 +32,6 @@ export default function GridLayout() {
   });
   const [queryHistory, setQueryHistory] = useState([]);
   const [selectedHistoryItem, setSelectedHistoryItem] = useState(null);
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude
-          });
-        },
-        (error) => {
-          setLocationError('Unable to retrieve your location. Please enable location services.');
-          console.error('Geolocation error:', error);
-        }
-      );
-    } else {
-      setLocationError('Geolocation is not supported by your browser.');
-    }
-  }, []);
 
   const clearConversation = () => {
     setConversationHistory([]);
@@ -107,7 +86,7 @@ export default function GridLayout() {
 
     try {
       // Call Claude API through backend
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/claude`, {
+      fetch(`/api/claude`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -153,7 +132,7 @@ export default function GridLayout() {
         });
 
       // Call OpenAI API directly
-      fetch('https://api.openai.com/v1/chat/completions', {
+      fetch('/api/openai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -200,7 +179,7 @@ export default function GridLayout() {
         });
 
       // Call Grok API directly
-      fetch('https://api.x.ai/v1/chat/completions', {
+      fetch('/api/grok', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -247,7 +226,7 @@ export default function GridLayout() {
         });
 
       // Call Perplexity API directly
-      fetch('https://api.perplexity.ai/chat/completions', {
+      fetch('/api/perplexity', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -730,36 +709,6 @@ export default function GridLayout() {
                 View Subscription
               </button>
             </div>
-          </div>
-
-          {/* Current Location */}
-          <div className={`mt-8 p-6 ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} rounded-xl border`}>
-            <h3 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Your Current Location</h3>
-            {locationError ? (
-              <div className="w-full h-96 bg-gray-300 rounded-lg flex items-center justify-center">
-                <p className="text-gray-700 text-center px-4">{locationError}</p>
-              </div>
-            ) : location ? (
-              <div className="w-full h-96 bg-gray-300 rounded-lg overflow-hidden">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  style={{ border: 0 }}
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${location.lon - 0.01},${location.lat - 0.01},${location.lon + 0.01},${location.lat + 0.01}&layer=mapnik&marker=${location.lat},${location.lon}`}
-                  allowFullScreen
-                ></iframe>
-              </div>
-            ) : (
-              <div className="w-full h-96 bg-gray-300 rounded-lg flex items-center justify-center">
-                <p className="text-gray-700">Loading your location...</p>
-              </div>
-            )}
-            {location && (
-              <p className={`mt-3 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                <span className="font-medium">Coordinates:</span> Latitude: {location.lat.toFixed(4)}, Longitude: {location.lon.toFixed(4)}
-              </p>
-            )}
           </div>
         </div>
       </div>
